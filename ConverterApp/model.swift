@@ -7,9 +7,9 @@
 
 import Foundation
 
+var currencies: [String] = ["UAH"]
+var rates: [String: (rate: Double, full_name: String)] = ["UAH": (1.00,"Українська гривня") ]
 
-var currencies: [String] = []
-var rates: [String: Double] = [:]
 
 func initData() {
     if let url = URL(string:"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json") {
@@ -22,8 +22,9 @@ func initData() {
                                 if let dict:NSDictionary = obj as? NSDictionary {
                                     let short_name: String = dict["cc"] as! String
                                     let rate: Double = dict["rate"] as! Double
+                                    let full_name: String = dict["txt"] as! String
                                     currencies.append(short_name)
-                                    rates[short_name] = rate
+                                    rates[short_name] = (rate, full_name)
                                 }
                             }
                            
@@ -37,10 +38,12 @@ func initData() {
 }
 
 
-
 func convert(currencyFrom: String, currencyTo: String, sumFrom: Double) -> Double {
-    return (rates[currencyFrom] ?? 0 / (rates[currencyTo] ?? 1) * sumFrom)
+    return (rates[currencyFrom]!.rate / rates[currencyTo]!.rate * sumFrom)
 }
+
+
+
 
 
 

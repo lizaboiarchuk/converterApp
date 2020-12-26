@@ -15,6 +15,7 @@
 		878737BF259668A900AB4CA5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 878737BD259668A900AB4CA5 /* LaunchScreen.storyboard */; };
 		878737C82596693800AB4CA5 /* model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878737C72596693800AB4CA5 /* model.swift */; };
 		878737CB259669E500AB4CA5 /* ConverterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878737CA259669E500AB4CA5 /* ConverterViewController.swift */; };
+		878737CE259759F100AB4CA5 /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878737CD259759F100AB4CA5 /* util.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		878737C0259668A900AB4CA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		878737C72596693800AB4CA5 /* model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = model.swift; sourceTree = "<group>"; };
 		878737CA259669E500AB4CA5 /* ConverterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterViewController.swift; sourceTree = "<group>"; };
+		878737CD259759F100AB4CA5 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				878737C0259668A900AB4CA5 /* Info.plist */,
 				878737C72596693800AB4CA5 /* model.swift */,
 				878737CA259669E500AB4CA5 /* ConverterViewController.swift */,
+				878737CD259759F100AB4CA5 /* util.swift */,
 			);
 			path = ConverterApp;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 				878737B7259668A800AB4CA5 /* ViewController.swift in Sources */,
 				878737B3259668A800AB4CA5 /* AppDelegate.swift in Sources */,
 				878737B5259668A800AB4CA5 /* SceneDelegate.swift in Sources */,
+				878737CE259759F100AB4CA5 /* util.swift in Sources */,
 				878737C82596693800AB4CA5 /* model.swift in Sources */,
 				878737CB259669E500AB4CA5 /* ConverterViewController.swift in Sources */,
 			);
