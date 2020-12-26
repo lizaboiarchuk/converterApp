@@ -42,6 +42,17 @@ func convert(currencyFrom: String, currencyTo: String, sumFrom: Double) -> Doubl
     return (rates[currencyFrom]!.rate / rates[currencyTo]!.rate * sumFrom)
 }
 
+func getValueFromString (input: String) -> Double {
+    var value = Double(-1)
+    if let v = Double(input) {
+        if v >= 0 {
+            value = v
+        }
+    }
+    return value
+}
+
+
 
 
 
