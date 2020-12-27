@@ -39,19 +39,30 @@ func initData() {
 
 
 func convert(currencyFrom: String, currencyTo: String, sumFrom: Double) -> Double {
-    return (rates[currencyFrom]!.rate / rates[currencyTo]!.rate * sumFrom)
+    return (round((rates[currencyFrom]!.rate / rates[currencyTo]!.rate * sumFrom)*100) / 100)
 }
 
-func getValueFromString (input: String) -> Double {
+// util function to validate and get double from string
+func getValueFromString (_ input: String) -> Double {
     var value = Double(-1)
     if let v = Double(input) {
-        if v >= 0 {
+        if v >= 0 && input[input.startIndex] != "-"{
             value = v
         }
     }
     return value
 }
 
+
+func validateAndRound(_ input: String) -> String {
+    let value = getValueFromString(input)
+    if value == -1 {
+        return ""
+    }
+    else {
+        return "\(round(value * 100) / 100)"
+    }
+}
 
 
 

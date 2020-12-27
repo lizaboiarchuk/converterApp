@@ -7,16 +7,14 @@
 
 import UIKit
 
-class ConverterViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class ConverterViewController: UIViewController {
     
     @IBOutlet weak var sumTo: UITextField!
     @IBOutlet weak var sumFrom: UITextField!
     @IBOutlet weak var currencyTo: UITextField!
     @IBOutlet weak var currencyFrom: UITextField!
-
     let fromPicker = UIPickerView()
     let toPicker = UIPickerView()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,30 +22,22 @@ class ConverterViewController: UIViewController, UIPickerViewDataSource, UIPicke
         fromPicker.delegate = self
         toPicker.dataSource = self
         toPicker.delegate = self
+        
         currencyFrom.inputView = fromPicker
         currencyTo.inputView = toPicker
         currencyFrom.text = currencies[0]
         currencyTo.text = currencies[1]
         sumFrom.text = "0.00"
         sumTo.text = "0.00"
-       // sumFrom.frame.size = CGSize(width: 60, height: 20)
-      //  sumTo.frame.size = CGSize(width: 60, height: 20)
-       // currencyFrom.frame.size = CGSize(width: 60, height: 20)
-      //  currencyTo.frame.size = CGSize(width: 60, height: 20)
-        
+ 
         sumTo.addTarget(self, action: #selector(ConverterViewController.textFieldDidChange(_:)), for: .editingChanged)
         sumFrom.addTarget(self, action: #selector(ConverterViewController.textFieldDidChange(_:)), for: .editingChanged)
-      
         currencyFrom.addTarget(self, action: #selector(ConverterViewController.currencyFieldDidChange(_:)), for: .editingChanged)
         currencyTo.addTarget(self, action: #selector(ConverterViewController.currencyFieldDidChange(_:)), for: .editingChanged)
         
-        
         let tap = UITapGestureRecognizer(target: self, action: #selector(ConverterViewController.dismissAllEditing))
         view.addGestureRecognizer(tap)
-
     }
-    
-    
     
     @objc func dismissAllEditing() {
         view.endEditing(true)
@@ -56,40 +46,12 @@ class ConverterViewController: UIViewController, UIPickerViewDataSource, UIPicke
     @IBAction func back() {
         dismiss(animated: true, completion: nil)
     }
-    
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        if textField == sumTo {
-            let value = getValueFromString(input: textField.text!)
-            if value == -1 {
-                sumFrom.text = ""
-            }
-            else {
-                sumFrom.text = String(format: "%.2f", convert(currencyFrom: currencyTo.text ?? currencies[0], currencyTo: currencyFrom.text ?? currencies[0], sumFrom: value))
-            }
-        }
-        if textField == sumFrom {
-            let value = getValueFromString(input: textField.text!)
-            if value == -1 {
-                sumTo.text = ""
-            }
-            else {
-                sumTo.text = String(format: "%.2f", convert(currencyFrom: currencyFrom.text ?? currencies[0], currencyTo: currencyTo.text ?? currencies[0], sumFrom: value))
-            }
-        }
-    }
-    
-    @objc func currencyFieldDidChange(_ textField: UITextField) {
-        if textField == currencyFrom {
-            if textField.text != currencies[fromPicker.selectedRow(inComponent: 0)] {
-                textField.text = currencies[fromPicker.selectedRow(inComponent: 0)]
-            }
-        }
-        if textField == currencyTo {
-            if textField.text != currencies[toPicker.selectedRow(inComponent: 0)] {
-                textField.text = currencies[toPicker.selectedRow(inComponent: 0)]
-            }
-        }
-    }
+
+}
+
+
+//handling pickerViews
+extension ConverterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -105,18 +67,59 @@ class ConverterViewController: UIViewController, UIPickerViewDataSource, UIPicke
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int,
     inComponent component: Int) {
-        
-        if pickerView == fromPicker {
-            currencyFrom.text = currencies[row]
-           // currencyFrom.endEditing(true)
-            sumTo.text = String(format: "%.2f", convert(currencyFrom: currencyFrom.text ?? currencies[0], currencyTo: currencyTo.text ?? currencies[0], sumFrom: getValueFromString(input: sumFrom.text ?? currencies[0])))
+        var currency_from = currencyFrom
+        var currency_to = currencyTo
+        var sum_from = sumFrom
+        var sum_to = sumTo
+        if pickerView == toPicker {
+            currency_from = currencyTo
+            currency_to = currencyFrom
+            sum_from = sumTo
+            sum_to = sumFrom
+        }
+        currency_from!.text = currencies[row]
+        sum_to!.text = String(format: "%.2f", convert(currencyFrom: currency_from!.text ?? currencies[0], currencyTo: currency_to!.text ?? currencies[0], sumFrom: getValueFromString(sum_from!.text ?? currencies[0])))
+    }
+}
+
+
+//hadling textFieldsChanges
+extension ConverterViewController {
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        var currency_from = currencyFrom
+        var currency_to = currencyTo
+        var sum_to = sumTo
+        if textField == sumTo {
+            currency_from = currencyTo
+            currency_to = currencyFrom
+            sum_to = sumFrom
+        }
+        let value = getValueFromString(textField.text!)
+        if value == -1 {
+            sum_to!.text = ""
         }
         else {
-            currencyTo.text = currencies[row]
-            //currencyTo.endEditing(true)
-            sumFrom.text = String(format: "%.2f", convert(currencyFrom: currencyTo.text ?? currencies[0], currencyTo: currencyFrom.text ?? currencies[0], sumFrom: getValueFromString(input: sumTo.text ?? currencies[0])))
+            sum_to!.text = String(format: "%.2f", convert(currencyFrom: currency_from!.text ?? currencies[0], currencyTo: currency_to!.text ?? currencies[0], sumFrom: value))
         }
-        
     }
     
+    @objc func currencyFieldDidChange(_ textField: UITextField) {
+        var picker = fromPicker
+        if textField == currencyTo {
+            picker = toPicker
+        }
+        if textField.text != currencies[picker.selectedRow(inComponent: 0)] {
+            textField.text = currencies[picker.selectedRow(inComponent: 0)]
+        }
+    }
+    
+    @IBAction func swapCurrencies(_ sender: Any) {
+        let cur = currencyFrom.text
+        currencyFrom.text = currencyTo.text
+        currencyTo.text = cur
+        let sum = validateAndRound(sumFrom.text ?? "")
+        sumFrom.text = validateAndRound(sumTo.text ?? "")
+        sumTo.text = sum
+    }
 }
